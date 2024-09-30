@@ -1,0 +1,41 @@
+terraform {
+        required_providers {
+                docker = {
+                        source="kreuzwerker/docker"
+                        version="~>2.21.0"
+                }
+        }
+}
+
+provider "docker" {
+        host = "unix:///var/run/docker.sock"
+}
+
+resource "docker_image" "nginx" {
+        name="nginx:latest"
+        keep_locally=false
+}
+
+resource "docker_container" "cont1" {
+        name="nginx-tf"
+        image=docker_image.nginx.name
+        ports{
+                internal=80
+                external=80
+        }
+}
+
+resource "docker_image" "ubuntu" {
+        name="ubuntu:latest"
+        keep_locally=false
+}
+
+resource "docker_container" "ubuntu-container" {
+        name="ubuntu-tf"
+        image=docker_image.ubuntu.name
+         command = ["/bin/bash", "-c", "while true; do sleep 3600; done"]
+        ports {
+                internal=8080
+                external=8080
+        }
+}

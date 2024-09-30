@@ -1,0 +1,12 @@
+resource "local_file" "dog" {
+        filename="/home/ubuntu/terraform/terraform-local/hello_automated.txt"
+        content="hello_world"
+}
+resource "random_string" "bark" {
+        length=20
+        special=true
+}
+
+output "bark" {
+        value=random_string.bark[*].result
+}
